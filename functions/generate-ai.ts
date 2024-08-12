@@ -10,7 +10,7 @@ import { createInteractiveExerciseWithOptionsInDB, createInteractiveExerciseWith
 import { createModuleInDB } from "@/actions/module/create";
 import { createMonthInDB } from "@/actions/month/create";
 import { createProjectInDB } from "@/actions/project/create";
-import { createQuizInDB, createQuizQuestionWithOptionsInDB, createQuizQuestionWithoutOptionsInDB } from "@/actions/quiz/create";
+
 import { createSubpathInDB } from "@/actions/subpath/create";
 import { fetchYoutubeSearchResults } from "@/actions/youtube/search";
 import { InteractiveExercise, InteractiveExerciseOption, LearningPathSubpath, Module, Month, Project, Quiz, QuizOption, QuizQuestion, Roadmap } from "@prisma/client";
@@ -131,50 +131,50 @@ export async function generateProjectFunction(subPaths: LearningPathSubpath[], m
     }
 }
 
-export async function generateQuizFunction(quizContext: Quiz, previousQuestions: QuizQuestion[]){
-    try {
-        let quizAI: QuizSchemaAIType | undefined;
-        let quizDBInit: QuizQuestion | undefined;
-        let quizOptionDBInit: QuizOption | undefined;
-        let questionsGenerated = 0
+// export async function generateQuizFunction(quizContext: Quiz, previousQuestions: QuizQuestion[]){
+//     try {
+//         let quizAI: QuizSchemaAIType | undefined;
+//         let quizDBInit: QuizQuestion | undefined;
+//         let quizOptionDBInit: QuizOption | undefined;
+//         let questionsGenerated = 0
 
-        for(let i = 0; i < quizContext.noOfQuestions; i++){
-            let prevQuestions = previousQuestions;
-            setTimeout(async () => {
-                const { object: quizObject } = await quizGenerator({ quizContext, prevQuestions });
+//         for(let i = 0; i < quizContext.noOfQuestions; i++){
+//             let prevQuestions = previousQuestions;
+//             setTimeout(async () => {
+//                 const { object: quizObject } = await quizGenerator({ quizContext, prevQuestions });
 
-                for await (const partialQuiz of readStreamableValue(quizObject)) {
-                    console.log(quizAI)
-                    if (partialQuiz) {
-                        quizAI = partialQuiz;
+//                 for await (const partialQuiz of readStreamableValue(quizObject)) {
+//                     console.log(quizAI)
+//                     if (partialQuiz) {
+//                         quizAI = partialQuiz;
         
-                        // MONTH RECORD
-                        if(quizAI){
-                            if(quizAI.type === 'objective'){
-                                const {quizDB} = await createQuizQuestionWithOptionsInDB(quizContext.id, quizAI)
-                                if(quizDB){
-                                    questionsGenerated++
-                                    prevQuestions.push(quizDB)
-                                }
-                            } else if(quizAI.type === 'subjective'){
-                                const {quizDB} = await createQuizQuestionWithoutOptionsInDB(quizContext.id, quizAI)
-                                if(quizDB){
-                                    questionsGenerated++
-                                    prevQuestions.push(quizDB)
-                                }
-                            }
-                        }
-                    }
-                }
-            },3000)
-        }     
+//                         // MONTH RECORD
+//                         if(quizAI){
+//                             if(quizAI.type === 'objective'){
+//                                 const {quizDB} = await createQuizQuestionWithOptionsInDB(quizContext.id, quizAI)
+//                                 if(quizDB){
+//                                     questionsGenerated++
+//                                     prevQuestions.push(quizDB)
+//                                 }
+//                             } else if(quizAI.type === 'subjective'){
+//                                 const {quizDB} = await createQuizQuestionWithoutOptionsInDB(quizContext.id, quizAI)
+//                                 if(quizDB){
+//                                     questionsGenerated++
+//                                     prevQuestions.push(quizDB)
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             },3000)
+//         }     
 
-        return { quizAI,quiz: quizDBInit, error: null }
-    } catch (error) {
-        console.log(error)
-        return { quiz: null, error }
-    }
-}
+//         return { quizAI,quiz: quizDBInit, error: null }
+//     } catch (error) {
+//         console.log(error)
+//         return { quiz: null, error }
+//     }
+// }
 
 
 export async function generateSubpathWithToolsFunction(month: Month, module: Module, previousSubPaths: LearningPathSubpath[], learningPathId:string ){
