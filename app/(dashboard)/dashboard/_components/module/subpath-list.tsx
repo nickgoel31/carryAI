@@ -98,20 +98,42 @@ const SubpathsList = ({
     // Show the button if the number of subpaths is odd, or if there is room to generate more exercises
     const subpathCount = subpathState.length
     const exerciseCount = exerciseState.length
-
-    return !loading.state && 
-      (subpathCount % 2 !== 0 || 
-      (subpathCount % 2 === 0 && exerciseCount <= subpathCount / 2))
+    if(subpathCount === 2 && exerciseCount < 1){
+        return false
+    }
+    if(subpathCount === 4 && exerciseCount < 2){
+        return false
+    }
+    if(subpathCount < 6){
+        return true;
+    }
+    return false;
   }
 
   const shouldShowGenerateExerciseButton = () => {
     // Show the button if the number of subpaths is even and the number of exercises is less than the number of subpaths divided by 2
     const subpathCount = subpathState.length
     const exerciseCount = exerciseState.length
+    if(subpathCount === 2 && exerciseCount === 1){
+        return false;
+    }
+    if(subpathCount === 3 && exerciseCount === 1 ){
+        return false
+    }
+    if(subpathCount === 4 && exerciseCount === 2){
+        return false
+    }
+    if(subpathCount === 5 && exerciseCount === 2 ){
+        return false
+    }
+    if(subpathCount === 6 && exerciseCount === 3){
+        return false
+    }
+    if(exerciseCount < 3){
+        return true;
+    }
 
-    return !loading.state && 
-      (subpathCount % 2 === 0 && 
-      exerciseCount !== Math.floor(subpathCount / 2))
+    return false;
   }
 
   return (

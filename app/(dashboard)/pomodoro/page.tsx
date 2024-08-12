@@ -26,20 +26,12 @@ const PomodoroPage = async () => {
 
     const modulesCustom = await getModulesFromMonthId(currentMonth.id)
     if(!modulesCustom.modules) return;
-    let subPaths:LearningPathSubpath[] = modulesCustom.modules.forEach(async module => {
-      const subpaths = await getSubpathsFromModuleId(module.id)
-      if(!subpaths.subPaths) return; 
-      const notCompleted = subpaths.subPaths.map(subpath => !subpath.isCompleted)
-      if(notCompleted.length > 0){
-          return subpaths.subPaths
-      }
-      return []
-  })
+    
     
 
   return (
     <div>
-        <PomodoroTimer subPaths={subPaths}/>
+        <PomodoroTimer subPaths={[]}/>
     </div>
   )
 }
