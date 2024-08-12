@@ -77,7 +77,10 @@ const OnboardingPage = () => {
       }
       
     }
-  },[step, router, user.user, userValues, userFromDB.userFound])
+    if (step === 6 && !loading.state) {
+      router.push('/dashboard')
+    }
+  },[step, router, user.user, userValues, userFromDB.userFound, setLoading, loading.state])
 
   function handleChangeStep(num:number){
     
